@@ -1,0 +1,45 @@
+name: unsplash
+description: "A new Flutter project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  flutter_staggered_grid_view: ^0.7.0
+
+  # Network
+  http: ^1.2.2
+  http_interceptor: ^2.0.0
+  logger: ^2.4.0
+  cached_network_image: ^3.4.1
+
+  # GetX
+  get: ^4.6.6
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat.ttf

@@ -1,0 +1,15 @@
+import 'package:get/get.dart';
+import 'package:unsplash/controllers/collections_controller.dart';
+import 'package:unsplash/controllers/collections_photos_controller.dart';
+import 'package:unsplash/controllers/home_controller.dart';
+import 'package:unsplash/controllers/main_controller.dart';
+
+class RootBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => MainController(), fenix: true);
+    Get.lazyPut(() => HomeController(), fenix: true);
+    Get.lazyPut(() => CollectionsController(), fenix: true);
+    Get.lazyPut(() => CollectionsPhotosController(), fenix: true);
+  }
+}
