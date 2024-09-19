@@ -47,7 +47,7 @@ class _CollectionsPageState extends State<CollectionsPage> with AutomaticKeepAli
   Widget itemOfCollection(Collection collection) {
     return GestureDetector(
       onTap: () {
-        controller.callPhotosPage(collection.id);
+        controller.callPhotosPage(collection.id, collection.title);
       },
       child: Container(
         margin: const EdgeInsets.only(top: 20),

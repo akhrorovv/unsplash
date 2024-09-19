@@ -22,9 +22,7 @@ class CollectionsController extends GetxController {
     }
   }
 
-  callPhotosPage(String id) {
-    Get.to(CollectionsPhotosPage(
-      id: id,
-    ));
+  callPhotosPage(String id, String title) {
+    Get.to(CollectionsPhotosPage(id: id, title: title));
   }
 }

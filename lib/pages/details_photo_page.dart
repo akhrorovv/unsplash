@@ -1,74 +1,58 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:unsplash/pages/show_photo_page.dart';
 
 import '../models/details_photo_model.dart';
 
 class DetailsPhotoPage extends StatefulWidget {
-  final String? id;
   final DetailsPhoto? photo;
 
-  const DetailsPhotoPage({super.key, this.id, this.photo});
+  const DetailsPhotoPage({super.key, this.photo});
 
   @override
   State<DetailsPhotoPage> createState() => _DetailsPhotoPageState();
 }
 
 class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
-  late String id;
   late DetailsPhoto photo;
 
   String formatNumber(int? number) {
-    if (number! >= 1000) {
+    if (number == null) return '0';
+
+    if (number >= 1000000) {
+      double result = number / 1000000;
+      return '${result.toStringAsFixed(1)}M';
+    } else if (number >= 1000) {
       double result = number / 1000;
       return '${result.toStringAsFixed(1)}K';
     }
     return number.toString();
   }
 
-  // apiDetailsPhoto() async {
-  //   try {
-  //     var response = await Network.GET(
-  //       Network.API_PHOTO.replaceFirst(':id', id),
-  //       Network.paramsCollectionsPhotos(),
-  //     );
-  //
-  //     setState(() {
-  //       photo = Network.parseDetailsPhoto(response!);
-  //     });
-  //
-  //     LogService.d(response.toString());
-  //   } catch (e) {
-  //     LogService.e(e.toString());
-  //   }
-  // }
+  goShowPhotoPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShowPhotoPage(
+          id: photo.id,
+          imgUrl: photo.urls.regular,
+          width: photo.width,
+          height: photo.height,
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    id = widget.id!;
-    photo = widget.photo!;
-    // apiDetailsPhoto();
-  }
 
-  String getCameraName() {
-    if (photo.exif!.name == null) {
-      return 'Unknown';
-    }
-    return photo.exif!.name!;
+    photo = widget.photo!;
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (photo == null) {
-    //   return const Scaffold(
-    //     backgroundColor: Colors.white,
-    //     body: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   ); // Show loading if null
-    // }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -81,39 +65,42 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
               statusBarIconBrightness:
                   Brightness.light, // Light status bar icons
             ),
-            child: Container(
-              color: Colors.transparent, // Background of the status bar
-            ),
+            child: Container(color: Colors.transparent),
           ),
 
           // Body content with an image at the top
           Column(
             children: [
-              Hero(
-                tag: photo.id,
-                child: CachedNetworkImage(
-                  imageUrl: photo.urls.regular,
-                  height: 280,
-                  placeholder: (context, urls) => Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        // borderRadius: BorderRadius.circular(8),
+              // image
+              GestureDetector(
+                onTap: () {
+                  goShowPhotoPage();
+                },
+                child: Hero(
+                  tag: photo.id,
+                  child: CachedNetworkImage(
+                    imageUrl: photo.urls.regular,
+                    height: 280,
+                    placeholder: (context, urls) => Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          // borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
-                  ),
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      // borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        // borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(15),
@@ -121,7 +108,7 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // profile
-                      Container(
+                      SizedBox(
                         height: 40,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,8 +123,7 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                                   ),
                                   child: CachedNetworkImage(
                                     fit: BoxFit.cover,
-                                    imageUrl:
-                                        'https://images.unsplash.com/photo-1719937206930-84afb0daf141?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1OTMyMzl8MXwxfGFsbHwxfHx8fHx8Mnx8MTcyNjI1NjQxOHw&ixlib=rb-4.0.3&q=80&w=1080',
+                                    imageUrl: photo.user.profileImage.medium,
                                     placeholder: (context, urls) => Center(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -160,9 +146,9 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-                                const Text(
-                                  "Samsung Memory",
-                                  style: TextStyle(
+                                Text(
+                                  photo.user.name,
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     fontFamily: "Montserrat",
@@ -178,8 +164,9 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      const Divider(),
+                      const SizedBox(height: 15),
+                      const Divider(
+                          height: 1, color: Color.fromRGBO(226, 226, 226, 1)),
                       const SizedBox(height: 15),
                       Text(
                         photo.altDescription,
@@ -212,7 +199,7 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                                 Container(
                                   padding: const EdgeInsets.only(right: 5),
                                   child: Text(
-                                    "${photo.exif!.name}" ?? "Unknown",
+                                    photo.exif!.name,
                                     maxLines: 1,
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -239,7 +226,7 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                                   ),
                                 ),
                                 Text(
-                                  photo.exif!.aperture ?? "Unknown",
+                                  photo.exif!.aperture,
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -270,7 +257,9 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                                   ),
                                 ),
                                 Text(
-                                  "${photo.exif!.focalLength} mm"  ?? "Unknown",
+                                  photo.exif!.focalLength != "Unknown"
+                                      ? "${photo.exif!.focalLength} mm"
+                                      : photo.exif!.focalLength,
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -282,7 +271,7 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                           ),
                           Container(
                             width: (MediaQuery.of(context).size.width - 30) / 2,
-                            child:  Column(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
@@ -295,7 +284,9 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                                   ),
                                 ),
                                 Text(
-                                  "${photo.exif!.exposureTime} s" ?? "Unknown",
+                                  photo.exif!.exposureTime != "Unknown"
+                                      ? "${photo.exif!.exposureTime} s"
+                                      : photo.exif!.exposureTime,
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -326,7 +317,9 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                                   ),
                                 ),
                                 Text(
-                                  photo.exif!.iso.toString(),
+                                  photo.exif!.iso != 0
+                                      ? photo.exif!.iso.toString()
+                                      : "Unknown",
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -365,7 +358,8 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                       ),
 
                       const SizedBox(height: 15),
-                      const Divider(),
+                      const Divider(
+                          height: 1, color: Color.fromRGBO(226, 226, 226, 1)),
                       const SizedBox(height: 15),
                       Row(
                         children: [
@@ -441,7 +435,8 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                         ],
                       ),
                       const SizedBox(height: 15),
-                      const Divider(),
+                      const Divider(
+                          height: 1, color: Color.fromRGBO(226, 226, 226, 1)),
                     ],
                   ),
                 ),

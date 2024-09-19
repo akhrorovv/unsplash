@@ -37,9 +37,7 @@ class HomeController extends GetxController {
     } catch (e) {
       LogService.e(e.toString());
     }
-    Get.to(DetailsPhotoPage(
-      id: id,
-      photo: photo,
-    ));
+
+    Get.to(DetailsPhotoPage(photo: photo));
   }
 }

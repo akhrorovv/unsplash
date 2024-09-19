@@ -30,7 +30,7 @@ class DetailsPhoto {
   // Sponsorship sponsorship;
   // DetailsPhotoTopicSubmissions topicSubmissions;
   // String assetType;
-  // User user;
+  User user;
   Exif? exif;
   // Location location;
   // Meta meta;
@@ -63,7 +63,7 @@ class DetailsPhoto {
     // required this.sponsorship,
     // required this.topicSubmissions,
     // required this.assetType,
-    // required this.user,
+    required this.user,
     required this.exif,
     // required this.location,
     // required this.meta,
@@ -97,7 +97,7 @@ class DetailsPhoto {
     // sponsorship: Sponsorship.fromJson(json["sponsorship"]),
     // topicSubmissions: DetailsPhotoTopicSubmissions.fromJson(json["topic_submissions"]),
     // assetType: json["asset_type"],
-    // user: User.fromJson(json["user"]),
+    user: User.fromJson(json["user"]),
     exif: Exif.fromJson(json["exif"]),
     // location: Location.fromJson(json["location"]),
     // meta: Meta.fromJson(json["meta"]),
@@ -214,7 +214,7 @@ class Exif {
     exposureTime: json["exposure_time"] ?? "Unknown",
     aperture: json["aperture"] ?? "Unknown",
     focalLength: json["focal_length"] ?? "Unknown",
-    iso: json["iso"] ?? "Unknown",
+    iso: json["iso"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {

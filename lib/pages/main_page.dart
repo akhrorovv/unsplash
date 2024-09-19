@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
@@ -11,14 +12,27 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage>
+    with SingleTickerProviderStateMixin {
   final controller = Get.find<MainController>();
+
+  bool _isVisible = true;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     controller.tabController = TabController(length: 2, vsync: this);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (_isVisible) setState(() => _isVisible = false);
+      } else {
+        if (!_isVisible) setState(() => _isVisible = true);
+      }
+    });
   }
 
   @override
@@ -38,18 +52,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 child: Column(
                   children: [
                     TabBar(
+                      dividerColor: const Color.fromRGBO(226, 226, 226, 1),
                       controller: controller.tabController,
-                      // indicatorColor: const Color.fromRGBO(0, 135, 0, 1),
                       indicatorColor: Colors.black,
-                      // labelColor: const Color.fromRGBO(0, 135, 0, 1),
                       labelColor: Colors.black,
                       unselectedLabelColor: const Color.fromRGBO(69, 71, 69, 1),
-                      dividerHeight: 2,
-                      tabs: [
-                        Container(
+                      dividerHeight: 1,
+                      splashFactory: NoSplash.splashFactory,
+                      tabs: const [
+                        SizedBox(
                           height: 40,
                           width: double.infinity,
-                          child: const Center(
+                          child: Center(
                             child: Text(
                               "HOME",
                               style: TextStyle(
@@ -60,10 +74,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height: 40,
                           width: double.infinity,
-                          child: const Center(
+                          child: Center(
                             child: Text(
                               "COLLECTIONS",
                               style: TextStyle(
@@ -85,6 +99,38 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   ],
                 ),
               ),
+              // floatingActionButton: _isVisible
+              //     ? FloatingActionButton(
+              //         shape: CircleBorder(),
+              //         onPressed: () {},
+              //         child: Icon(Icons.add),
+              //       )
+              //     : null,
+              // floatingActionButtonLocation:
+              //     FloatingActionButtonLocation.centerDocked,
+              bottomNavigationBar: _isVisible
+                  ? BottomAppBar(
+                      shape: const CircularNotchedRectangle(), // Notch for FAB
+                      // color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.menu),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.filter_list),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    )
+                  : null,
             ),
           ),
         );

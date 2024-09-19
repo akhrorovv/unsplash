@@ -3,7 +3,7 @@ import 'package:http_interceptor/http_interceptor.dart';
 import 'log_service.dart';
 
 class HttpInterceptor implements InterceptorContract {
-  static String CLIENT_ID = "hI79iLiNv3Z3eJhzpmvCi0_-dJPOhd0EmRXDKcnUQy0";
+  static String CLIENT_ID = "LE2Oyixfkigq1ebBRQj2bIM4LQnq25SafKe4CUXCJfI";
 
   @override
   FutureOr<BaseRequest> interceptRequest({required BaseRequest request}) {
