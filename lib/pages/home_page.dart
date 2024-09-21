@@ -13,14 +13,16 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   final controller = Get.find<HomeController>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller.apiPhotos();
+
+    controller.scrollListener();
   }
 
   @override
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           body: Container(
             padding: const EdgeInsets.only(left: 5),
             child: MasonryGridView.count(
+              controller: controller.scrollController,
               itemCount: controller.photos.length,
               physics: const BouncingScrollPhysics(),
               crossAxisCount: 2,
@@ -48,7 +51,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   Widget itemOfPhoto(Photo photo) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         controller.callDetailsPhotoPage(photo.id);
       },
       child: Hero(
@@ -56,7 +59,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         child: AspectRatio(
           aspectRatio: photo.width.toDouble() / photo.height.toDouble(),
           child: Container(
-            margin: const EdgeInsets.only(right: 5,top: 5),
+            margin: const EdgeInsets.only(right: 5, top: 5),
             child: CachedNetworkImage(
               imageUrl: photo.urls.regular,
               placeholder: (context, urls) => Center(

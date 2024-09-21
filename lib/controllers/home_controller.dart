@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unsplash/models/details_photo_model.dart';
 import 'package:unsplash/pages/details_photo_page.dart';
@@ -7,19 +8,44 @@ import '../services/http_service.dart';
 import '../services/log_service.dart';
 
 class HomeController extends GetxController {
+  ScrollController scrollController = ScrollController();
+  bool isLoading = false;
+  int currentPage = 1;
   List<Photo> photos = [];
   late DetailsPhoto? photo;
 
+  scrollListener() {
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent <=
+              scrollController.offset &&
+          !isLoading) {
+        apiPhotos();
+      }
+    });
+  }
+
   apiPhotos() async {
+    if (isLoading) return;
+    isLoading = true;
+
     try {
-      var response = await Network.GET(Network.API_PHOTOS, Network.paramsPhotos());
+      var response = await Network.GET(
+          Network.API_PHOTOS, Network.paramsPhotos(currentPage));
 
-      photos.addAll(Network.parsePhotosList(response!));
-      update();
+      List<Photo> newPhotos = Network.parsePhotosList(response!);
 
+      if (newPhotos.isNotEmpty) {
+        photos.addAll(newPhotos);
+        currentPage++;
+        update();
+      } else {
+        LogService.w("No more photos to load");
+      }
       LogService.i(photos.length.toString());
     } catch (e) {
-      LogService.e(e.toString());
+      LogService.e("ERROR: $e");
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -27,7 +53,7 @@ class HomeController extends GetxController {
     try {
       var response = await Network.GET(
         Network.API_PHOTO.replaceFirst(':id', id),
-        Network.paramsCollectionsPhotos(),
+        Network.paramsPhoto(),
       );
 
       photo = Network.parseDetailsPhoto(response!);

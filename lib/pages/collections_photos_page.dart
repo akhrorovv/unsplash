@@ -27,6 +27,8 @@ class _CollectionsPhotosPageState extends State<CollectionsPhotosPage> {
     controller.id = widget.id!;
     controller.title = widget.title!;
     controller.apiCollectionPhotos();
+
+    controller.scrollListener();
   }
 
   @override
@@ -51,6 +53,7 @@ class _CollectionsPhotosPageState extends State<CollectionsPhotosPage> {
           body: Container(
             padding: const EdgeInsets.only(left: 5),
             child: MasonryGridView.count(
+              controller: controller.scrollController,
               itemCount: controller.collectionPhotos.length,
               physics: const BouncingScrollPhysics(),
               crossAxisCount: 2,

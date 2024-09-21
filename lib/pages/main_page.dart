@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../controllers/main_controller.dart';
+import '../widgets/custom_bottom_app_bar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -16,23 +16,11 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   final controller = Get.find<MainController>();
 
-  bool _isVisible = true;
-  ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    controller.tabController = TabController(length: 2, vsync: this);
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        if (_isVisible) setState(() => _isVisible = false);
-      } else {
-        if (!_isVisible) setState(() => _isVisible = true);
-      }
-    });
+    controller.tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -99,42 +87,36 @@ class _MainPageState extends State<MainPage>
                   ],
                 ),
               ),
-              // floatingActionButton: _isVisible
-              //     ? FloatingActionButton(
-              //         shape: CircleBorder(),
-              //         onPressed: () {},
-              //         child: Icon(Icons.add),
-              //       )
-              //     : null,
-              // floatingActionButtonLocation:
-              //     FloatingActionButtonLocation.centerDocked,
-              bottomNavigationBar: _isVisible
-                  ? BottomAppBar(
-                      shape: const CircularNotchedRectangle(), // Notch for FAB
-                      // color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.menu),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.search),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.filter_list),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    )
-                  : null,
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget buildBottomBar() {
+    Map bottomAppBarMargin = {
+      'left': 20.0,
+      'right': 20.0,
+      'bottom': 12.0,
+      'top': 0.0,
+    };
+    return Container(
+      margin: EdgeInsets.only(
+        left: bottomAppBarMargin['left'],
+        right: bottomAppBarMargin['right'],
+        bottom: bottomAppBarMargin['bottom'],
+        top: bottomAppBarMargin['top'],
+      ),
+      child: CustomBottomAppBar(
+        elevation: 0.0,
+        positionInHorizontal: (0.0 - bottomAppBarMargin['left']),
+        color: Colors.white,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 5.0,
+        clipBehavior: Clip.antiAlias,
+        // child: SizedBox(...)
+      ),
     );
   }
 }

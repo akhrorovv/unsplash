@@ -20,6 +20,8 @@ class _CollectionsPageState extends State<CollectionsPage> with AutomaticKeepAli
     // TODO: implement initState
     super.initState();
     controller.apiCollections();
+
+    controller.scrollListener();
   }
 
   @override
@@ -32,6 +34,7 @@ class _CollectionsPageState extends State<CollectionsPage> with AutomaticKeepAli
           body: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ListView.builder(
+              controller: controller.scrollController,
               physics: const BouncingScrollPhysics(),
               itemCount: controller.collections.length,
               itemBuilder: (context, index) {
