@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../controllers/main_controller.dart';
-import '../widgets/custom_bottom_app_bar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -91,32 +90,6 @@ class _MainPageState extends State<MainPage>
           ),
         );
       },
-    );
-  }
-
-  Widget buildBottomBar() {
-    Map bottomAppBarMargin = {
-      'left': 20.0,
-      'right': 20.0,
-      'bottom': 12.0,
-      'top': 0.0,
-    };
-    return Container(
-      margin: EdgeInsets.only(
-        left: bottomAppBarMargin['left'],
-        right: bottomAppBarMargin['right'],
-        bottom: bottomAppBarMargin['bottom'],
-        top: bottomAppBarMargin['top'],
-      ),
-      child: CustomBottomAppBar(
-        elevation: 0.0,
-        positionInHorizontal: (0.0 - bottomAppBarMargin['left']),
-        color: Colors.white,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 5.0,
-        clipBehavior: Clip.antiAlias,
-        // child: SizedBox(...)
-      ),
     );
   }
 }

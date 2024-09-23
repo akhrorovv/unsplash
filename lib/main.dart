@@ -4,7 +4,10 @@ import 'package:unsplash/pages/main_page.dart';
 
 import 'config/root_binding.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
+
   runApp(const MyApp());
 }
 

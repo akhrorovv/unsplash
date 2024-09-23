@@ -22,7 +22,6 @@ class _CollectionsPhotosPageState extends State<CollectionsPhotosPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller.id = widget.id!;
     controller.title = widget.title!;

@@ -1,10 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:unsplash/controllers/home_controller.dart';
 
-import '../models/photo_model.dart';
+import '../widgets/photo_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,49 +39,12 @@ class _HomePageState extends State<HomePage>
               physics: const BouncingScrollPhysics(),
               crossAxisCount: 2,
               itemBuilder: (context, index) {
-                return itemOfPhoto(controller.photos[index]);
+                return itemOfPhoto(controller.photos[index], controller);
               },
             ),
           ),
         );
       },
-    );
-  }
-
-  Widget itemOfPhoto(Photo photo) {
-    return GestureDetector(
-      onTap: () {
-        controller.callDetailsPhotoPage(photo.id);
-      },
-      child: Hero(
-        tag: photo.id,
-        child: AspectRatio(
-          aspectRatio: photo.width.toDouble() / photo.height.toDouble(),
-          child: Container(
-            margin: const EdgeInsets.only(right: 5, top: 5),
-            child: CachedNetworkImage(
-              imageUrl: photo.urls.regular,
-              placeholder: (context, urls) => Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 

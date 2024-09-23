@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:unsplash/pages/show_photo_page.dart';
 
 import '../models/details_photo_model.dart';
@@ -42,6 +48,50 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
         ),
       ),
     );
+  }
+
+  static void showToast() {
+    Fluttertoast.showToast(
+      msg: "Image saved",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 10,
+      backgroundColor: Colors.grey[300],
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
+  }
+
+  Future<void> downloadImage(String url) async {
+    // Check and request permission
+    PermissionStatus permission = await Permission.storage.request();
+    if (!permission.isGranted) {
+      print('Permission denied');
+      return;
+    }
+
+    // Get the image data
+    final http.Response response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // Get the external storage directory
+      final directory = await getExternalStorageDirectory();
+      String downloadsPath = '/storage/emulated/0/Download';
+
+      // Ensure the directory exists
+      Directory(downloadsPath).createSync(recursive: true);
+
+      // Create a file name based on the current timestamp
+      String fileName = 'image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      File file = File('$downloadsPath/$fileName');
+
+      // Write the file to the Downloads folder
+      await file.writeAsBytes(response.bodyBytes);
+      print('Image saved to $downloadsPath/$fileName');
+    } else {
+      print('Failed to download image');
+    }
+
+    showToast();
   }
 
   @override
@@ -113,53 +163,62 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.blue,
-                                  ),
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl: photo.user.profileImage.medium,
-                                    placeholder: (context, urls) => Center(
-                                      child: Container(
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.blue,
+                                    ),
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                      imageUrl: photo.user.profileImage.medium,
+                                      placeholder: (context, urls) => Center(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                      ),
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.grey[300],
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                    ),
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 15),
-                                Text(
-                                  photo.user.name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "Montserrat",
+                                  const SizedBox(width: 15),
+                                  Expanded(
+                                    child: Text(
+                                      photo.user.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: "Montserrat",
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             IconButton(
-                              onPressed: () {},
-                              icon:
-                                  const Icon(Icons.upload, color: Colors.black),
+                              onPressed: () {
+                                downloadImage(photo.urls.regular);
+                              },
+                              icon: const Icon(Icons.download,
+                                  color: Colors.black),
                             )
                           ],
                         ),
