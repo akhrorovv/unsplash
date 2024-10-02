@@ -105,21 +105,23 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
 
           // // Set status bar color and brightness
-          AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Colors.black.withOpacity(0.3),
-              // Make status bar transparent
-              statusBarIconBrightness:
-                  Brightness.light, // Light status bar icons
-            ),
-            child: Container(color: Colors.transparent),
-          ),
+          // AnnotatedRegion<SystemUiOverlayStyle>(
+          //   value: SystemUiOverlayStyle(
+          //     statusBarColor: Colors.black.withOpacity(0.3),
+          //     // Make status bar transparent
+          //     statusBarIconBrightness:
+          //         Brightness.light, // Light status bar icons
+          //   ),
+          //   child: Container(color: Colors.transparent),
+          // ),
 
           // Body content with an image at the top
           Column(
@@ -170,17 +172,6 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                       ),
                     ),
                   ),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(
-                  //     horizontal: 20,
-                  //     vertical: 50,
-                  //   ),
-                  //   child: const Icon(
-                  //     Icons.keyboard_backspace_outlined,
-                  //     color: Colors.black,
-                  //     size: 30,
-                  //   ),
-                  // )
                 ],
               ),
               Expanded(
