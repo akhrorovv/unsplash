@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http/intercepted_client.dart';
 import 'package:unsplash/models/details_photo_model.dart';
+import 'package:unsplash/models/search/search_photo_model.dart';
 
 import '../models/collection_model.dart';
 import '../models/collections_photo_model.dart';
@@ -121,6 +122,17 @@ class Network {
     return params;
   }
 
+  static Map<String, String> paramsSearchPhotos(String query, int currentPage) {
+    Map<String, String> params = {};
+    params.addAll({
+      'query': query,
+      'page': currentPage.toString(),
+      'per_page': '10',
+      'client_id': HttpInterceptor.CLIENT_ID
+    });
+    return params;
+  }
+
   static Map<String, String> paramsCollections(int currentPage) {
     Map<String, String> params = {};
     params.addAll({
@@ -163,6 +175,11 @@ class Network {
     dynamic json = jsonDecode(response);
     return List<Photo>.from(json.map((x) => Photo.fromJson(x)));
   }
+
+  // static List<SearchPhoto> parseSearchPhotosList(String response) {
+  //   dynamic json = jsonDecode(response);
+  //   return List<SearchPhoto>.from(json.map((x) => SearchPhoto.fromJson(x)));
+  // }
 
   static List<Collection> parseCollections(String response) {
     dynamic json = jsonDecode(response);

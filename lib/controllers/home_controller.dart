@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unsplash/models/details_photo_model.dart';
 import 'package:unsplash/pages/details_photo_page.dart';
+import 'package:unsplash/pages/search/search_page.dart';
 
 import '../models/photo_model.dart';
 import '../services/http_service.dart';
@@ -30,7 +31,9 @@ class HomeController extends GetxController {
 
     try {
       var response = await Network.GET(
-          Network.API_PHOTOS, Network.paramsPhotos(currentPage));
+        Network.API_PHOTOS,
+        Network.paramsPhotos(currentPage),
+      );
 
       List<Photo> newPhotos = Network.parsePhotosList(response!);
 
@@ -47,6 +50,18 @@ class HomeController extends GetxController {
     } finally {
       isLoading = false;
     }
+  }
+
+  animateTo() {
+    scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  callSearchPage() {
+    Get.to(SearchPage());
   }
 
   callDetailsPhotoPage(String id) async {

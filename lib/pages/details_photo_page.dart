@@ -52,7 +52,7 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
 
   static void showToast() {
     Fluttertoast.showToast(
-      msg: "Image saved",
+      msg: "Download completed",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 10,
@@ -238,7 +238,7 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
                             ),
                             IconButton(
                               onPressed: () {
-                                downloadImage(photo.urls.regular);
+                                downloadImage(photo.urls.full);
                               },
                               icon: const Icon(Icons.download,
                                   color: Colors.black),
