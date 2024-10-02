@@ -105,9 +105,12 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      // appBar: AppBar(),
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // Set status bar color and brightness
+
+          // // Set status bar color and brightness
           AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
               statusBarColor: Colors.black.withOpacity(0.3),
@@ -122,34 +125,63 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
           Column(
             children: [
               // image
-              GestureDetector(
-                onTap: () {
-                  goShowPhotoPage();
-                },
-                child: Hero(
-                  tag: photo.id,
-                  child: CachedNetworkImage(
-                    imageUrl: photo.urls.regular,
-                    height: 280,
-                    placeholder: (context, urls) => Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          // borderRadius: BorderRadius.circular(8),
+              Stack(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      goShowPhotoPage();
+                    },
+                    child: Hero(
+                      tag: photo.id,
+                      child: CachedNetworkImage(
+                        imageUrl: photo.urls.regular,
+                        height: 280,
+                        placeholder: (context, urls) => Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              // borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        // borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            // borderRadius: BorderRadius.circular(8),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Positioned(
+                      top: MediaQuery.of(context).padding.top, // Adjusts for status bar height
+                      left: 0,
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back, size: 40,),
+                        color: Colors.white.withOpacity(0.0), // Transparent icon color
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(
+                  //     horizontal: 20,
+                  //     vertical: 50,
+                  //   ),
+                  //   child: const Icon(
+                  //     Icons.keyboard_backspace_outlined,
+                  //     color: Colors.black,
+                  //     size: 30,
+                  //   ),
+                  // )
+                ],
               ),
               Expanded(
                 child: Container(

@@ -26,66 +26,62 @@ class _MainPageState extends State<MainPage>
   Widget build(BuildContext context) {
     return GetBuilder<MainController>(
       builder: (controller) {
-        return SafeArea(
-          child: AnnotatedRegion(
-            value: const SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.dark,
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              body: DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    TabBar(
-                      dividerColor: const Color.fromRGBO(226, 226, 226, 1),
-                      controller: controller.tabController,
-                      indicatorColor: Colors.black,
-                      labelColor: Colors.black,
-                      unselectedLabelColor: const Color.fromRGBO(69, 71, 69, 1),
-                      dividerHeight: 1,
-                      splashFactory: NoSplash.splashFactory,
-                      tabs: const [
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: Center(
-                            child: Text(
-                              "HOME",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Montserrat",
-                              ),
-                            ),
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            toolbarHeight: 0,
+            backgroundColor: Colors.white,
+          ),
+          body: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                TabBar(
+                  dividerColor: const Color.fromRGBO(226, 226, 226, 1),
+                  controller: controller.tabController,
+                  indicatorColor: Colors.black,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: const Color.fromRGBO(69, 71, 69, 1),
+                  dividerHeight: 1,
+                  splashFactory: NoSplash.splashFactory,
+                  tabs: const [
+                    SizedBox(
+                      height: 40,
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          "HOME",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "Montserrat",
                           ),
                         ),
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: Center(
-                            child: Text(
-                              "COLLECTIONS",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Montserrat",
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: controller.tabController,
-                        children: controller.pages,
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          "COLLECTIONS",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "Montserrat",
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
+                Expanded(
+                  child: TabBarView(
+                    controller: controller.tabController,
+                    children: controller.pages,
+                  ),
+                )
+              ],
             ),
           ),
         );
