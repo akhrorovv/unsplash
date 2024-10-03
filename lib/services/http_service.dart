@@ -111,6 +111,7 @@ class Network {
   static String API_COLLECTIONS_PHOTOS = "/collections/:id/photos";
   static String API_SEARCH_PHOTOS = "/search/photos";
   static String API_SEARCH_COLLECTIONS = "/search/collections";
+  static String API_SEARCH_USERS = "/search/users";
 
   /* Http Params */
   static Map<String, String> paramsPhotos(int currentPage) {

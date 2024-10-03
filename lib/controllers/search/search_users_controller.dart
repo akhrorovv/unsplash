@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/search/search_collection_model.dart';
-import '../../pages/collections_photos_page.dart';
+import '../../models/search/search_user_model.dart';
 import '../../services/http_service.dart';
 import '../../services/log_service.dart';
 
-class SearchCollectionsController extends GetxController {
+class SearchUsersController extends GetxController {
   String? query = '';
   ScrollController scrollController = ScrollController();
   bool isLoading = false;
   int currentPage = 1;
-  List<SearchCollection> searchCollections = [];
+  List<SearchedUser> searchUsers = [];
 
-  callPhotosPage(String id, String title) {
-    Get.to(CollectionsPhotosPage(id: id, title: title));
-  }
-
-  apiSearchCollections(String? q) async {
+  apiSearchUsers(String? q) async {
     if (isLoading) return;
     isLoading = true;
 
@@ -26,23 +21,22 @@ class SearchCollectionsController extends GetxController {
         LogService.i("Making API request for query: $q, Page: $currentPage");
 
         var response = await Network.GET(
-          Network.API_SEARCH_COLLECTIONS,
+          Network.API_SEARCH_USERS,
           Network.paramsSearching(q, currentPage),
         );
         LogService.i("Response: $response");
 
-        List<SearchCollection>? newCollections =
-            searchCollectionResFromJson(response!).results;
+        List<SearchedUser>? newUsers = searchUserResFromJson(response!).results;
 
-        if (newCollections!.isNotEmpty) {
-          searchCollections.addAll(newCollections);
-          LogService.i("Added ${newCollections.length} new photos");
+        if (newUsers!.isNotEmpty) {
+          searchUsers.addAll(newUsers);
+          LogService.i("Added ${newUsers.length} new photos");
           currentPage++;
           update();
         } else {
           LogService.w("No more photos found");
         }
-        LogService.i("Total photos: ${searchCollections.length}");
+        LogService.i("Total photos: ${newUsers.length}");
       } catch (e) {
         LogService.e("ERROR: $e");
       } finally {
@@ -60,7 +54,7 @@ class SearchCollectionsController extends GetxController {
           !isLoading) {
         if (query != null && query!.isNotEmpty) {
           LogService.d("Query during scroll: $query");
-          apiSearchCollections(query);
+          apiSearchUsers(query);
         } else {
           LogService.e("Scroll triggered, but query is null or empty");
         }

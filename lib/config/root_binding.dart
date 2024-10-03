@@ -7,6 +7,8 @@ import 'package:unsplash/controllers/search/search_collections_controller.dart';
 import 'package:unsplash/controllers/search/search_controller.dart';
 import 'package:unsplash/controllers/search/search_photos_controller.dart';
 
+import '../controllers/search/search_users_controller.dart';
+
 class RootBinding implements Bindings {
   @override
   void dependencies() {
@@ -17,5 +19,6 @@ class RootBinding implements Bindings {
     Get.lazyPut(() => SearchesController(), fenix: true);
     Get.lazyPut(() => SearchPhotosController(), fenix: true);
     Get.lazyPut(() => SearchCollectionsController(), fenix: true);
+    Get.lazyPut(() => SearchUsersController(), fenix: true);
   }
 }

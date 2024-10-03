@@ -63,7 +63,7 @@ class _SearchCollectionsState extends State<SearchCollections>
   Widget itemOfCollection(SearchCollection collection) {
     return GestureDetector(
       onTap: () {
-        // controller.callPhotosPage(collection.id, collection.title);
+        controller.callPhotosPage(collection.id ?? '', collection.title ?? '');
       },
       child: Container(
         margin: const EdgeInsets.only(top: 20),

@@ -4,8 +4,10 @@ import 'package:unsplash/controllers/search/search_controller.dart';
 import 'package:unsplash/controllers/search/search_photos_controller.dart';
 import 'package:unsplash/pages/search/search_collections.dart';
 import 'package:unsplash/pages/search/search_photos.dart';
+import 'package:unsplash/pages/search/search_users.dart';
 
 import '../../controllers/search/search_collections_controller.dart';
+import '../../controllers/search/search_users_controller.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -17,8 +19,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
   final controller = Get.find<SearchesController>();
-  final searchController = Get.find<SearchPhotosController>();
+  final searchPhotosController = Get.find<SearchPhotosController>();
   final searchCollectionController = Get.find<SearchCollectionsController>();
+  final searchUsersController = Get.find<SearchUsersController>();
 
   @override
   void initState() {
@@ -38,11 +41,13 @@ class _SearchPageState extends State<SearchPage>
             surfaceTintColor: Colors.transparent,
             title: TextField(
               onSubmitted: (query) {
-                searchController.query = query;
+                searchPhotosController.query = query;
                 searchCollectionController.query = query;
+                searchUsersController.query = query;
                 controller.searchPhotos(query);
-                searchController.update();
+                searchPhotosController.update();
                 searchCollectionController.update();
+                searchUsersController.update();
               },
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -135,7 +140,13 @@ class _SearchPageState extends State<SearchPage>
                           );
                         },
                       ),
-                      Container(color: Colors.yellow),
+                      GetBuilder<SearchPhotosController>(
+                        builder: (_) {
+                          return SearchUsers(
+                            query: controller.queryController.text,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 )

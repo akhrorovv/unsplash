@@ -45,6 +45,16 @@ class _DetailsPhotoPageState extends State<DetailsPhotoPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.keyboard_arrow_left_rounded,
+            size: 40,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Column(
         children: [
