@@ -51,7 +51,8 @@ class _SearchPhotosPageState extends State<SearchPhotosPage>
                     physics: const BouncingScrollPhysics(),
                     crossAxisCount: 2,
                     itemBuilder: (context, index) {
-                      return itemOfPhoto(controller.searchPhotos[index], controller);
+                      return itemOfPhoto(
+                          controller.searchPhotos[index], controller);
                     },
                   ),
                 )

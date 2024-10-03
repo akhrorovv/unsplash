@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unsplash/controllers/search/search_controller.dart';
 import 'package:unsplash/controllers/search/search_photos_controller.dart';
-import 'package:unsplash/pages/search/search_photos_page.dart';
+import 'package:unsplash/pages/search/search_collections.dart';
+import 'package:unsplash/pages/search/search_photos.dart';
+
+import '../../controllers/search/search_collections_controller.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -15,6 +18,7 @@ class _SearchPageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
   final controller = Get.find<SearchesController>();
   final searchController = Get.find<SearchPhotosController>();
+  final searchCollectionController = Get.find<SearchCollectionsController>();
 
   @override
   void initState() {
@@ -35,8 +39,10 @@ class _SearchPageState extends State<SearchPage>
             title: TextField(
               onSubmitted: (query) {
                 searchController.query = query;
+                searchCollectionController.query = query;
                 controller.searchPhotos(query);
                 searchController.update();
+                searchCollectionController.update();
               },
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -122,7 +128,13 @@ class _SearchPageState extends State<SearchPage>
                           );
                         },
                       ),
-                      Container(color: Colors.blue),
+                      GetBuilder<SearchPhotosController>(
+                        builder: (_) {
+                          return SearchCollections(
+                            query: controller.queryController.text,
+                          );
+                        },
+                      ),
                       Container(color: Colors.yellow),
                     ],
                   ),

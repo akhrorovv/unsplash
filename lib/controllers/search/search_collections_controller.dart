@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:unsplash/controllers/main_controller.dart';
-import 'package:unsplash/controllers/search/search_controller.dart';
-import 'package:unsplash/models/search/search_photo_model.dart';
 
-import '../../models/details_photo_model.dart';
-import '../../pages/details_photo_page.dart';
+import '../../models/search/search_collection_model.dart';
 import '../../services/http_service.dart';
 import '../../services/log_service.dart';
 
-class SearchPhotosController extends GetxController {
+class SearchCollectionsController extends GetxController {
   String? query = '';
 
   ScrollController scrollController = ScrollController();
   bool isLoading = false;
   int currentPage = 1;
-  List<SearchPhoto> searchPhotos = [];
-  late DetailsPhoto? photo;
+  List<SearchCollection> searchCollections = [];
 
-  apiSearchPhotos(String? q) async {
+  apiSearchCollections(String? q) async {
     if (isLoading) return;
     isLoading = true;
 
@@ -27,22 +22,23 @@ class SearchPhotosController extends GetxController {
         LogService.i("Making API request for query: $q, Page: $currentPage");
 
         var response = await Network.GET(
-          Network.API_SEARCH_PHOTOS,
+          Network.API_SEARCH_COLLECTIONS,
           Network.paramsSearching(q, currentPage),
         );
         LogService.i("Response: $response");
 
-        List<SearchPhoto> newPhotos = searchPhotoFromJson(response!).results;
+        List<SearchCollection>? newCollections =
+            searchCollectionResFromJson(response!).results;
 
-        if (newPhotos.isNotEmpty) {
-          searchPhotos.addAll(newPhotos);
-          LogService.i("Added ${newPhotos.length} new photos");
+        if (newCollections!.isNotEmpty) {
+          searchCollections.addAll(newCollections);
+          LogService.i("Added ${newCollections.length} new photos");
           currentPage++;
           update();
         } else {
           LogService.w("No more photos found");
         }
-        LogService.i("Total photos: ${searchPhotos.length}");
+        LogService.i("Total photos: ${searchCollections.length}");
       } catch (e) {
         LogService.e("ERROR: $e");
       } finally {
@@ -60,29 +56,11 @@ class SearchPhotosController extends GetxController {
           !isLoading) {
         if (query != null && query!.isNotEmpty) {
           LogService.d("Query during scroll: $query");
-          apiSearchPhotos(query);
+          apiSearchCollections(query);
         } else {
           LogService.e("Scroll triggered, but query is null or empty");
         }
       }
     });
-  }
-
-  callDetailsPhotoPage(String id) async {
-    try {
-      var response = await Network.GET(
-        Network.API_PHOTO.replaceFirst(':id', id),
-        Network.paramsPhoto(),
-      );
-
-      photo = Network.parseDetailsPhoto(response!);
-      update();
-
-      LogService.d(response.toString());
-    } catch (e) {
-      LogService.e(e.toString());
-    }
-
-    Get.to(DetailsPhotoPage(photo: photo));
   }
 }

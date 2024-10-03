@@ -8,6 +8,7 @@ import 'package:unsplash/models/search/search_photo_model.dart';
 import '../models/collection_model.dart';
 import '../models/collections_photo_model.dart';
 import '../models/photo_model.dart';
+import '../models/search/search_collection_model.dart';
 import 'http_helper.dart';
 
 class Network {
@@ -106,9 +107,10 @@ class Network {
   /* Http Apis*/
   static String API_PHOTO = "/photos/:id";
   static String API_PHOTOS = "/photos";
-  static String API_SEARCH_PHOTOS = "/search/photos";
   static String API_COLLECTIONS = "/collections";
   static String API_COLLECTIONS_PHOTOS = "/collections/:id/photos";
+  static String API_SEARCH_PHOTOS = "/search/photos";
+  static String API_SEARCH_COLLECTIONS = "/search/collections";
 
   /* Http Params */
   static Map<String, String> paramsPhotos(int currentPage) {
@@ -122,7 +124,7 @@ class Network {
     return params;
   }
 
-  static Map<String, String> paramsSearchPhotos(String query, int currentPage) {
+  static Map<String, String> paramsSearching(String query, int currentPage) {
     Map<String, String> params = {};
     params.addAll({
       'query': query,
@@ -155,9 +157,7 @@ class Network {
 
   static Map<String, String> paramsPhoto() {
     Map<String, String> params = {};
-    params.addAll({
-      'client_id': HttpInterceptor.CLIENT_ID
-    });
+    params.addAll({'client_id': HttpInterceptor.CLIENT_ID});
     return params;
   }
 
@@ -165,7 +165,7 @@ class Network {
 
   static DetailsPhoto? parseDetailsPhoto(String? response) {
     if (response == null || response.isEmpty) {
-      return null;  // Safely return null if the response is empty or null
+      return null; // Safely return null if the response is empty or null
     }
     dynamic json = jsonDecode(response);
     return DetailsPhoto.fromJson(json);
@@ -176,14 +176,14 @@ class Network {
     return List<Photo>.from(json.map((x) => Photo.fromJson(x)));
   }
 
-  // static List<SearchPhoto> parseSearchPhotosList(String response) {
-  //   dynamic json = jsonDecode(response);
-  //   return List<SearchPhoto>.from(json.map((x) => SearchPhoto.fromJson(x)));
-  // }
-
   static List<Collection> parseCollections(String response) {
     dynamic json = jsonDecode(response);
     return List<Collection>.from(json.map((x) => Collection.fromJson(x)));
+  }
+
+  static List<SearchCollection> parseSearchCollections(String response) {
+    dynamic json = jsonDecode(response);
+    return List<SearchCollection>.from(json.map((x) => SearchCollection.fromJson(x)));
   }
 
   static List<CollectionsPhoto> parseCollectionsPhotos(String response) {

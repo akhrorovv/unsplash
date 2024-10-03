@@ -6,7 +6,7 @@ import 'package:unsplash/models/search/search_photo_model.dart';
 Widget itemOfPhoto(SearchPhoto photo, SearchPhotosController controller) {
   return GestureDetector(
     onTap: () {
-      // controller.callDetailsPhotoPage(photo.id);
+      controller.callDetailsPhotoPage(photo.id);
     },
     child: Hero(
       tag: photo.id,
