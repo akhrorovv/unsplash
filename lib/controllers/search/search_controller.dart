@@ -11,7 +11,6 @@ class SearchesController extends GetxController {
 
   void searchPhotos(String query) {
     photosController.searchPhotos.clear();
-    LogService.w(query.length.toString());
     photosController.apiSearchPhotos(query);
   }
 }

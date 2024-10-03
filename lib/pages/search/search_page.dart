@@ -11,8 +11,10 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage>
+    with SingleTickerProviderStateMixin {
   final controller = Get.find<SearchesController>();
+  final searchController = Get.find<SearchPhotosController>();
 
   @override
   void initState() {
@@ -31,10 +33,10 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             backgroundColor: Colors.white,
             surfaceTintColor: Colors.transparent,
             title: TextField(
-              controller: controller.queryController,
               onSubmitted: (query) {
+                searchController.query = query;
                 controller.searchPhotos(query);
-                controller.update();
+                searchController.update();
               },
               decoration: const InputDecoration(
                 border: InputBorder.none,

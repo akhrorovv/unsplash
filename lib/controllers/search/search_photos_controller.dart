@@ -8,11 +8,7 @@ import '../../services/http_service.dart';
 import '../../services/log_service.dart';
 
 class SearchPhotosController extends GetxController {
-  // final searchController = Get.find<SearchesController>();
-
-  // Receiving arguments from the previous page
-  // final passedData = Get.arguments;
-  String? query;
+  String? query = '';
 
   ScrollController scrollController = ScrollController();
   bool isLoading = false;
@@ -21,41 +17,49 @@ class SearchPhotosController extends GetxController {
 
   scrollListener() {
     scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent <=
-              scrollController.offset &&
-          !isLoading) {
-        currentPage++;
-        apiSearchPhotos(query ?? "");
+      if (scrollController.position.maxScrollExtent <= scrollController.offset && !isLoading) {
+        if (query != null && query!.isNotEmpty) {
+          LogService.d("Query during scroll: $query");
+          apiSearchPhotos(query);
+        } else {
+          LogService.e("Scroll triggered, but query is null or empty");
+        }
       }
     });
   }
 
-  apiSearchPhotos(String q) async {
+  apiSearchPhotos(String? q) async {
     if (isLoading) return;
     isLoading = true;
 
-    LogService.w(q);
+    if (q != null && q.isNotEmpty) {
+      try {
+        LogService.i("Making API request for query: $q, Page: $currentPage");
 
-    try {
-      var response = await Network.GET(
-        Network.API_SEARCH_PHOTOS,
-        Network.paramsSearchPhotos(q, currentPage),
-      );
+        var response = await Network.GET(
+          Network.API_SEARCH_PHOTOS,
+          Network.paramsSearchPhotos(q, currentPage),
+        );
+        LogService.i("Response: $response");
 
-      List<SearchPhoto> newPhotos = searchPhotoFromJson(response!).results;
+        List<SearchPhoto> newPhotos = searchPhotoFromJson(response!).results;
 
-      if (newPhotos.isNotEmpty) {
-        searchPhotos.addAll(newPhotos);
-        currentPage++;
-        update();
-      } else {
-        LogService.w("No more photos to load");
+        if (newPhotos.isNotEmpty) {
+          searchPhotos.addAll(newPhotos);
+          LogService.i("Added ${newPhotos.length} new photos");
+          currentPage++;
+          update();
+        } else {
+          LogService.w("No more photos found");
+        }
+        LogService.i("Total photos: ${searchPhotos.length}");
+      } catch (e) {
+        LogService.e("ERROR: $e");
+      } finally {
+        isLoading = false;
       }
-      LogService.i(searchPhotos.length.toString());
-    } catch (e) {
-      LogService.e("ERROR: $e");
-    } finally {
-      isLoading = false;
+    } else {
+      LogService.w("Query is empty");
     }
   }
 }

@@ -5,10 +5,12 @@ import 'package:unsplash/controllers/search/search_photos_controller.dart';
 import 'package:unsplash/services/log_service.dart';
 import 'package:unsplash/widgets/search_photo_widget.dart';
 
-class SearchPhotosPage extends StatefulWidget {
-  final String? query;
+import '../../widgets/empty_widget.dart';
 
-  const SearchPhotosPage({super.key, this.query});
+class SearchPhotosPage extends StatefulWidget {
+  final String query;
+
+  const SearchPhotosPage({super.key, required this.query});
 
   @override
   State<SearchPhotosPage> createState() => _SearchPhotosPageState();
@@ -22,8 +24,14 @@ class _SearchPhotosPageState extends State<SearchPhotosPage>
   void initState() {
     super.initState();
 
-    controller.query = widget.query ?? '';
-    controller.apiSearchPhotos(controller.query.toString());
+    // Ensure widget.query is not null or empty before assigning
+    if (widget.query.isNotEmpty) {
+      controller.query = widget.query;
+      controller.apiSearchPhotos(controller.query!);
+    } else {
+      LogService.w("Search query is empty in initState");
+    }
+
     controller.scrollListener();
   }
 
@@ -43,14 +51,11 @@ class _SearchPhotosPageState extends State<SearchPhotosPage>
                     physics: const BouncingScrollPhysics(),
                     crossAxisCount: 2,
                     itemBuilder: (context, index) {
-                      return itemOfPhoto(
-                          controller.searchPhotos[index], controller);
+                      return itemOfPhoto(controller.searchPhotos[index], controller);
                     },
                   ),
                 )
-              : Center(
-                  child: Text('No photos'),
-                ),
+              : emptyWidget(context),
         );
       },
     );

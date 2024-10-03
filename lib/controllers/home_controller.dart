@@ -61,7 +61,7 @@ class HomeController extends GetxController {
   }
 
   callSearchPage() {
-    Get.to(SearchPage());
+    Get.to(const SearchPage());
   }
 
   callDetailsPhotoPage(String id) async {
