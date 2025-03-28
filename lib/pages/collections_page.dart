@@ -66,7 +66,7 @@ class _CollectionsPageState extends State<CollectionsPage> with AutomaticKeepAli
                     width: 40,
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: collection.user.profileImage.medium,
+                      imageUrl: collection.user!.profileImage!.medium.toString(),
                       placeholder: (context, urls) => Center(
                         child: Container(
                           decoration: BoxDecoration(
@@ -88,7 +88,7 @@ class _CollectionsPageState extends State<CollectionsPage> with AutomaticKeepAli
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    collection.user.name,
+                    collection.user!.name.toString(),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -105,7 +105,7 @@ class _CollectionsPageState extends State<CollectionsPage> with AutomaticKeepAli
                 children: [
                   CachedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: collection.coverPhoto.urls.regular,
+                    imageUrl: collection.coverPhoto!.urls!.regular.toString(),
                     placeholder: (context, urls) => Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -148,7 +148,7 @@ class _CollectionsPageState extends State<CollectionsPage> with AutomaticKeepAli
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          collection.title,
+                          collection.title.toString(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,

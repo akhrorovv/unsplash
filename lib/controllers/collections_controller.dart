@@ -28,9 +28,16 @@ class CollectionsController extends GetxController {
 
     try {
       var response = await Network.GET(
-          Network.API_COLLECTIONS, Network.paramsCollections(currentPage));
+        Network.API_COLLECTIONS,
+        Network.paramsCollections(currentPage),
+      );
 
-      List<Collection> newCollections = Network.parseCollections(response!);
+      if (response == null) {
+        LogService.e("ERROR: API response is null");
+        return;
+      }
+
+      List<Collection> newCollections = Network.parseCollections(response);
 
       if (newCollections.isNotEmpty) {
         collections.addAll(newCollections);
@@ -40,7 +47,7 @@ class CollectionsController extends GetxController {
         LogService.w("No more photos to load");
       }
 
-      LogService.d(collections.length.toString());
+      LogService.d("Total collections: ${collections.length}");
     } catch (e) {
       LogService.e("ERROR: $e");
     } finally {
@@ -48,7 +55,7 @@ class CollectionsController extends GetxController {
     }
   }
 
-  callPhotosPage(String id, String title) {
+  callPhotosPage(String? id, String? title) {
     Get.to(CollectionsPhotosPage(id: id, title: title));
   }
 }
